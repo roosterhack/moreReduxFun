@@ -1,10 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { loadCourses } from '../../redux/actions/courseActions';
-import { loadAuthors } from '../../redux/actions/authorActions';
-import PropTypes from 'prop-types';
-import CourseList from './CourseList';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { connect } from "react-redux";
+import { loadCourses } from "../../redux/actions/courseActions";
+import { loadAuthors } from "../../redux/actions/authorActions";
+import PropTypes from "prop-types";
+import CourseList from "./CourseList";
+import { Redirect } from "react-router-dom";
+import { Spinner } from "../common/Spinner";
 
 class CoursesPage extends React.Component {
   state = { redirectToAddCoursePage: false };
@@ -13,12 +14,12 @@ class CoursesPage extends React.Component {
     const { courses, authors, loadAuthors, loadCourses } = this.props;
     if (courses.length === 0) {
       loadCourses().catch(error => {
-        alert('Loading courses failed' + error);
+        alert("Loading courses failed" + error);
       });
     }
     if (authors.length === 0) {
       loadAuthors().catch(error => {
-        alert('Loading authors failed' + error);
+        alert("Loading authors failed" + error);
       });
     }
   }
@@ -26,11 +27,12 @@ class CoursesPage extends React.Component {
   render() {
     return (
       <>
-        {this.state.redirectToAddCoursePage && <Redirect to='/course' />}
+        {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
+
         <button
           style={{ marginBottom: 20 }}
-          className='btn btn-primary add-course'
+          className="btn btn-primary add-course"
           onClick={() => this.setState({ redirectToAddCoursePage: true })}
         >
           Add Course

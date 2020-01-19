@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadCourses } from '../../redux/actions/courseActions';
+import { loadCourses, deleteCourse } from '../../redux/actions/courseActions';
 import { loadAuthors } from '../../redux/actions/authorActions';
 import PropTypes from 'prop-types';
 import CourseList from './CourseList';
 import { Redirect } from 'react-router-dom';
 import { Spinner } from '../common/Spinner';
+import { toast } from 'react-toastify';
 
 class CoursesPage extends React.Component {
   state = { redirectToAddCoursePage: false };
@@ -24,6 +25,15 @@ class CoursesPage extends React.Component {
     }
   }
 
+  handleDeleteCourse = async course => {
+    toast.success('Course deleted');
+    try {
+      await this.props.deleteCourse(course);
+    } catch (error) {
+      toast.error('delete failed' + error.message, { autoClose: false });
+    }
+  };
+
   render() {
     return (
       <>
@@ -40,7 +50,10 @@ class CoursesPage extends React.Component {
             >
               Add Course
             </button>
-            <CourseList courses={this.props.courses} />
+            <CourseList
+              onDeleteClick={this.handleDeleteCourse}
+              courses={this.props.courses}
+            />
           </>
         )}
       </>
@@ -53,7 +66,8 @@ CoursesPage.propTypes = {
   courses: PropTypes.array.isRequired,
   loadCourses: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  deleteCourse: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -74,7 +88,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   loadCourses,
-  loadAuthors
+  loadAuthors,
+  deleteCourse
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
